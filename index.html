@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calisthenics Main Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .menu-link {
+            display: block;
+            padding: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+        .menu-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💪 Calisthenics Programs</h1>
+        <div class="menu-links">
+            <a href="calisthenics-beginner.html" class="menu-link">Beginner Program</a>
+            <a href="calisthenics-intermediate.html" class="menu-link">Intermediate Program</a>
+            <a href="calisthenics-advanced.html" class="menu-link">Advanced Program</a>
+        </div>
+    </div>
+</body>
+</html>

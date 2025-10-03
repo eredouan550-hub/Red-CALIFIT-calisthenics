@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RED MSW - Calisthenics Programs</title>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#3b82f6">
+
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Calisthenics">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#3b82f6">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .level-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .level-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .level-card.beginner {
+            border-color: #4CAF50;
+        }
+        
+        .level-card.intermediate {
+            border-color: #FF9800;
+        }
+        
+        .level-card.advanced {
+            border-color: #f44336;
+        }
+        
+        .level-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .level-card h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #1e3c72;
+        }
+        
+        .level-card p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .level-stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .level-stats strong {
+            color: #1e3c72;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #1e3c72;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #1e3c72;
+        }
+        
+        .btn:hover {
+            background: #f44336;
+            border-color: #f44336;
+            transform: scale(1.05);
+        }
+        
+        .btn-beginner {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .btn-intermediate {
+            background: #FF9800;
+            border-color: #FF9800;
+        }
+        
+        .btn-advanced {
+            background: #f44336;
+            border-color: #f44336;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .back-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-5px);
+        }
+/* Hide back button on main page when it points to itself */
+a.back-button[href="calisthenics-index.html"] {
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <a href="calisthenics-index.html" class="back-button">← Back to Main Menu</a>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>💪 Calisthenics Programs</h1>
+            <p>Choose Your Level - Transform Your Body</p>
+        </div>
+
+        <!-- Levels Grid -->
+        <div class="levels-grid">
+            <!-- Beginner Level -->
+            <div class="level-card beginner">
+                <div class="level-icon">🌱</div>
+                <h2>Beginner</h2>
+                <div class="level-stats">
+                    <strong>Perfect for starters</strong><br>
+                    4 weeks • Foundation building<br>
+                    3-4 workouts per week
+                </div>
+                <p>Build fundamental strength and master basic movements. Perfect if you're new to calisthenics or returning after a break.</p>
+                <a href="calisthenics-beginner.html" class="btn btn-beginner">Start Beginner Program</a>
+            </div>
+
+            <!-- Intermediate Level -->
+            <div class="level-card intermediate">
+                <div class="level-icon">🚀</div>
+                <h2>Intermediate</h2>
+                <div class="level-stats">
+                    <strong>For consistent trainers</strong><br>
+                    6 weeks • Skill development<br>
+                    4-5 workouts per week
+                </div>
+                <p>Progress to advanced movements and build impressive skills. For those with solid foundation ready for the next challenge.</p>
+                <a href="calisthenics-intermediate.html" class="btn btn-intermediate">Start Intermediate Program</a>
+            </div>
+
+            <!-- Advanced Level -->
+            <div class="level-card advanced">
+                <div class="level-icon">🔥</div>
+                <h2>Advanced</h2>
+                <div class="level-stats">
+                    <strong>Elite performance</strong><br>
+                    7 days • Master level<br>
+                    6 workouts per week
+                </div>
+                <p>Master elite skills and achieve peak performance. For experienced athletes ready for the ultimate calisthenics challenge.</p>
+                <a href="calisthenics-advanced.html" class="btn btn-advanced">Start Advanced Program</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully with scope: ', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+    </div> <!-- Close container div -->
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully with scope: ', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RED MSW - Calisthenics Beginner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .main-header h1 {
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .main-header p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .week-navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .day-button {
+            padding: 15px 10px;
+            background: #1e3c72;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border: 2px solid #1e3c72;
+        }
+        
+        .day-button:hover, .day-button.active {
+            background: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .workout-day {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid #4CAF50;
+            display: none;
+        }
+        
+        .workout-day.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .exercise {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #1e3c72;
+            transition: transform 0.3s ease;
+        }
+        
+        .exercise:hover {
+            transform: translateX(5px);
+        }
+        
+        .exercise h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 400px;
+            height: 225px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+            border: 2px dashed #ccc;
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .video-placeholder:hover {
+            background: #d0d0d0;
+        }
+        
+        .video-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        
+        .exercise-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 25px;
+            background: #1e3c72;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .back-button:hover {
+            background: #2a5298;
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        .complete-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .complete-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .progress-section h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .exercise-grid {
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            }
+            
+            .week-navigation {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-header {
+                padding: 20px;
+            }
+            
+            .main-header h1 {
+                font-size: 2rem;
+            }
+            
+            .exercise-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .video-container {
+                height: 200px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <!-- Back Button -->
+<a href="index.html" class="back-button">
+    <i class="fas fa-arrow-left"></i> Back to Main Menu
+</a>
+
+        <!-- Header -->
+        <header class="main-header">
+            <h1><i class="fas fa-dumbbell"></i> Calisthenics - Beginner Program</h1>
+            <p>7-Day Foundation - 14 Exercises Per Day - Build Proper Form</p>
+            <div class="level-stats" style="background: #4CAF50; color: white; padding: 15px; border-radius: 10px;">
+                <strong>Day Focus: Chest & Push Strength | 14 Exercises | 60-75 Minutes</strong>
+            </div>
+        </header>
+
+        <!-- Week Navigation -->
+        <div class="week-navigation">
+            <div class="day-button active" onclick="showDay(1)">Day 1<br>Chest</div>
+            <div class="day-button" onclick="showDay(2)">Day 2<br>Back</div>
+            <div class="day-button" onclick="showDay(3)">Day 3<br>Legs</div>
+            <div class="day-button" onclick="showDay(4)">Day 4<br>Core</div>
+            <div class="day-button" onclick="showDay(5)">Day 5<br>Full Body</div>
+            <div class="day-button" onclick="showDay(6)">Day 6<br>Skills</div>
+            <div class="day-button" onclick="showDay(7)">Day 7<br>Recovery</div>
+        </div>
+
+        <!-- DAY 1: CHEST - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day1" class="workout-day active">
+            <h2><i class="fas fa-calendar-alt"></i> Day 1: Chest & Push Strength</h2>
+            <p><strong>Focus:</strong> Building foundational pushing strength and chest development - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Arm circles, shoulder rotations, light cardio, dynamic stretching</p>
+                </div>
+
+                <!-- Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Decline Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">5</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Feet elevated 12-18 inches, chest to ground, elbows at 45°</p>
+                </div>
+
+                <!-- Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Regular Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">7</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full range of motion, body straight as plank, core engaged</p>
+                </div>
+
+                <!-- Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Dips</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">3</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Use parallel bars or sturdy chairs, controlled descent, shoulders down</p>
+                </div>
+
+                <!-- Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Incline Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Hands elevated on bench/table, focus on upper chest activation</p>
+                </div>
+
+                <!-- Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Wide Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">6</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Wide hand placement (wider than shoulders), chest stretch at bottom</p>
+                </div>
+
+                <!-- Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Push-up Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Hold at bottom position, build static strength, don't sag hips</p>
+                </div>
+
+                <!-- Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Knee Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Perfect form practice, knees on ground, full chest range</p>
+                </div>
+
+                <!-- Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Wall Push-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Chest touches wall, control eccentric phase, build mind-muscle connection</p>
+                </div>
+
+                <!-- Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Shoulder Taps</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Maintain stable plank, alternate shoulder taps, core stability</p>
+                </div>
+
+                <!-- Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Plank to Push-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Forearm plank to push-up position, control transition</p>
+                </div>
+
+                <!-- Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. Chest Stretch Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Doorway chest stretch, feel pectoral stretch, deep breathing</p>
+                </div>
+
+                <!-- Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Push-up Negatives</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">5</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> 5-second descent, controlled negative, build eccentric strength</p>
+                </div>
+
+                <!-- Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Chest, shoulder, tricep stretches, deep breathing, recovery focus</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2: BACK - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day2" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 2: Back & Pull Strength</h2>
+            <p><strong>Focus:</strong> Building foundational pulling strength and back development - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Back Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Arm circles, shoulder rotations, back mobility, light cardio</p>
+                </div>
+
+                <!-- Back Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Inverted Rows</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Use table or bar, chest to surface, squeeze shoulder blades</p>
+                </div>
+
+                <!-- Back Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Australian Pull-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">6</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Body under bar, pull chest to bar, full extension</p>
+                </div>
+
+                <!-- Back Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Scapular Pull-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Dead hang to scapular retraction, build back activation</p>
+                </div>
+
+                <!-- Back Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Bent-over Dumbbell Rows</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Use water bottles if no dumbbells, squeeze back muscles</p>
+                </div>
+
+                <!-- Back Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Resistance Band Pull-aparts</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Band at chest level, squeeze shoulder blades together</p>
+                </div>
+
+                <!-- Back Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Superman Holds</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Lift arms and legs, engage lower back, controlled breathing</p>
+                </div>
+
+                <!-- Back Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Face Pulls (Band)</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Pull to face level, external rotation, shoulder health</p>
+                </div>
+
+                <!-- Back Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Single-arm Rows</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Arm</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Bench support, full range, mind-muscle connection</p>
+                </div>
+
+                <!-- Back Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Dead Hangs</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full shoulder extension, grip strength, decompress spine</p>
+                </div>
+
+                <!-- Back Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. YTWL Exercises</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Prone on floor, Y-T-W-L positions, shoulder health</p>
+                </div>
+
+                <!-- Back Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. Lat Stretch</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Overhead lat stretch, deep breathing, mobility</p>
+                </div>
+
+                <!-- Back Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Banded Pull-downs</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Band anchored high, pull to chest, squeeze lats</p>
+                </div>
+
+                <!-- Back Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Back, shoulder, lat stretches, deep breathing, recovery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3: LEGS - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day3" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 3: Legs & Lower Body Power</h2>
+            <p><strong>Focus:</strong> Building leg strength, power, and stability - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Leg Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Leg swings, hip circles, knee raises, light cardio</p>
+                </div>
+
+                <!-- Leg Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Bodyweight Squats</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Depth control, knees tracking over toes, chest up</p>
+                </div>
+
+                <!-- Leg Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Lunges</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Front knee at 90 degrees, back knee nearly touching floor</p>
+                </div>
+
+                <!-- Leg Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Glute Bridges</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Squeeze glutes at top, full hip extension</p>
+                </div>
+
+                <!-- Leg Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Calf Raises</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full range of motion, pause at top, controlled descent</p>
+                </div>
+
+                <!-- Leg Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Step-ups</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Use sturdy chair or step, drive through heel</p>
+                </div>
+
+                <!-- Leg Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Wall Sit Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Knees at 90 degrees, back flat against wall</p>
+                </div>
+
+                <!-- Leg Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Single-leg Deadlifts</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Hinge at hips, maintain balance, controlled movement</p>
+                </div>
+
+                <!-- Leg Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Squat Jumps</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Explosive power, soft landing, absorb impact</p>
+                </div>
+
+                <!-- Leg Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Side Lunges</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Lateral movement, hip mobility, controlled descent</p>
+                </div>
+
+                <!-- Leg Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Donkey Kicks</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Glute activation, controlled movement, avoid arching back</p>
+                </div>
+
+                <!-- Leg Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. Quad Stretch Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Deep quad stretch, maintain balance, deep breathing</p>
+                </div>
+
+                <!-- Leg Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Hamstring Curls (Band)</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Anchor band, controlled curl, squeeze hamstrings</p>
+                </div>
+
+                <!-- Leg Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Leg, hip, glute stretches, deep breathing, recovery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 4: CORE - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day4" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 4: Core Strength & Stability</h2>
+            <p><strong>Focus:</strong> Building strong, stable core for all movements - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Core Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core activation, cat-cow stretches, light cardio</p>
+                </div>
+
+                <!-- Core Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Plank Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Straight line body, engage entire core, don't sag</p>
+                </div>
+
+                <!-- Core Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Leg Raises</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Controlled movement, lower back pressed to floor</p>
+                </div>
+
+                <!-- Core Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Russian Twists</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Slow rotation, engage obliques, controlled movement</p>
+                </div>
+
+                <!-- Core Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Bicycle Crunches</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Elbow to knee, full extension, controlled tempo</p>
+                </div>
+
+                <!-- Core Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Side Plank</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Straight line body, engage obliques, don't sag hips</p>
+                </div>
+
+                <!-- Core Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Mountain Climbers</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Stable plank position, controlled knee drive</p>
+                </div>
+
+                <!-- Core Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Reverse Crunches</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Lift hips off floor, engage lower abs</p>
+                </div>
+
+                <!-- Core Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Bird-Dog</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Opposite arm/leg extension, maintain balance</p>
+                </div>
+
+                <!-- Core Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Dead Bug</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Lower back pressed to floor, controlled limb movement</p>
+                </div>
+
+                <!-- Core Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Hollow Body Hold</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Banana shape, engage entire core, controlled breathing</p>
+                </div>
+
+                <!-- Core Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. L-sit Practice</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Use parallettes or floor, legs straight, core engaged</p>
+                </div>
+
+                <!-- Core Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Windshield Wipers</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Controlled rotation, shoulders grounded</p>
+                </div>
+
+                <!-- Core Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core, back, hip stretches, deep breathing, recovery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 5: FULL BODY - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day5" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 5: Full Body Integration</h2>
+            <p><strong>Focus:</strong> Compound movements and full body coordination - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Full Body Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full body mobility, light cardio, activation</p>
+                </div>
+
+                <!-- Full Body Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Burpees</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full body coordination, explosive power</p>
+                </div>
+
+                <!-- Full Body Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Squat to Overhead Press</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Smooth transition, use water bottles as weight</p>
+                </div>
+
+                <!-- Full Body Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Push-up to Renegade Row</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Stable hips, controlled rowing motion</p>
+                </div>
+
+                <!-- Full Body Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Lunges with Twist</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core engagement during lunge, controlled rotation</p>
+                </div>
+
+                <!-- Full Body Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Plank to Push-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core stability during transition</p>
+                </div>
+
+                <!-- Full Body Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Squat Jumps</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">12</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Explosive power, full body coordination</p>
+                </div>
+
+                <!-- Full Body Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Bear Crawls</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Steps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Cross-body coordination, core stability</p>
+                </div>
+
+                <!-- Full Body Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Mountain Climber to Push-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core to upper body transition</p>
+                </div>
+
+                <!-- Full Body Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Jumping Jacks</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Cardiovascular endurance, full body movement</p>
+                </div>
+
+                <!-- Full Body Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Plank with Shoulder Taps</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Each Side</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core stability during shoulder movement</p>
+                </div>
+
+                <!-- Full Body Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. High Knees</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Cardiovascular intensity, knee drive, arm coordination</p>
+                </div>
+
+                <!-- Full Body Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Plank Jacks</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core stability with leg movement, shoulder endurance</p>
+                </div>
+
+                <!-- Full Body Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Full body stretching, deep breathing, recovery focus</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 6: SKILLS - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day6" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 6: Skills Development</h2>
+            <p><strong>Focus:</strong> Coordination, balance, and advanced movement patterns - 4 sets each exercise</p>
+            
+            <div class="exercise-grid">
+                <!-- Skills Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. 10-Minute Dynamic Warm-up</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Warm-up Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Wrist mobility, shoulder prep, light skill practice</p>
+                </div>
+
+                <!-- Skills Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Handstand Practice (Wall)</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">5</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Back to wall, shoulder engagement, body alignment</p>
+                </div>
+
+                <!-- Skills Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. L-sit Practice</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Core compression, straight legs, shoulder depression</p>
+                </div>
+
+                <!-- Skills Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Balance Training</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Each Leg</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Single leg stands, progress to eyes closed</p>
+                </div>
+
+                <!-- Skills Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Crow Pose Practice</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">5</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Knee on elbows, forward lean, gaze forward</p>
+                </div>
+
+                <!-- Skills Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Skin the Cat</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">5</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder mobility, controlled rotation</p>
+                </div>
+
+                <!-- Skills Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Hollow Body Rock</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Maintain hollow shape, controlled rocking motion</p>
+                </div>
+
+                <!-- Skills Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Arch Body Rock</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">15</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Back extension, shoulder retraction</p>
+                </div>
+
+                <!-- Skills Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. German Hang</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder flexibility, controlled descent</p>
+                </div>
+
+                <!-- Skills Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Tuck Planche Practice</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">5</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder protraction, lean forward, knees tucked</p>
+                </div>
+
+                <!-- Skills Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Wall Handstand Walk</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">5</div><div>Steps</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder stability, controlled hand movement</p>
+                </div>
+
+                <!-- Skills Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. Support Hold (Rings/Bars)</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">4</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">20s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder depression, straight arms, body tight</p>
+                </div>
+
+                <!-- Skills Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Wrist Mobility Drills</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Exercise Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">45s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Wrist circles, stretches, prep for hand balancing</p>
+                </div>
+
+                <!-- Skills Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Cool Down & Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Cool Down Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Shoulder, wrist, back stretches, skill integration</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 7: RECOVERY - COMPLETE WITH ALL 14 EXERCISES -->
+        <div id="day7" class="workout-day">
+            <h2><i class="fas fa-calendar-alt"></i> Day 7: Active Recovery & Mobility</h2>
+            <p><strong>Focus:</strong> Recovery, flexibility, and preparing for next week - Gentle movements</p>
+            
+            <div class="exercise-grid">
+                <!-- Recovery Exercise 1 -->
+                <div class="exercise">
+                    <h3>1. Light 10-Minute Walk</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Walking Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Set</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Gentle movement, blood flow, mental relaxation</p>
+                </div>
+
+                <!-- Recovery Exercise 2 -->
+                <div class="exercise">
+                    <h3>2. Full Body Stretch Routine</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Stretch Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Round</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Each Stretch</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>No Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Hold each stretch, don't bounce, deep breathing</p>
+                </div>
+
+                <!-- Recovery Exercise 3 -->
+                <div class="exercise">
+                    <h3>3. Foam Rolling</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Foam Roll Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Round</div></div>
+                        <div class="stat-box"><div class="stat-value">60s</div><div>Each Area</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>No Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Quads, hamstrings, glutes, back, calves</p>
+                </div>
+
+                <!-- Recovery Exercise 4 -->
+                <div class="exercise">
+                    <h3>4. Deep Breathing Exercises</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Breathing Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Session</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Complete Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> 4-second inhale, 6-second exhale, diaphragmatic breathing</p>
+                </div>
+
+                <!-- Recovery Exercise 5 -->
+                <div class="exercise">
+                    <h3>5. Yoga Flow - Sun Salutations</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Yoga Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">3</div><div>Rounds</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Flow</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Smooth transitions, breath coordination</p>
+                </div>
+
+                <!-- Recovery Exercise 6 -->
+                <div class="exercise">
+                    <h3>6. Hip Mobility Drills</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Mobility Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Hip circles, leg swings, pigeon pose variations</p>
+                </div>
+
+                <!-- Recovery Exercise 7 -->
+                <div class="exercise">
+                    <h3>7. Shoulder Mobility Sequence</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Mobility Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">8</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Arm circles, shoulder dislocates, wall slides</p>
+                </div>
+
+                <!-- Recovery Exercise 8 -->
+                <div class="exercise">
+                    <h3>8. Spinal Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Mobility Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Reps</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Cat-cow, spinal twists, child's pose</p>
+                </div>
+
+                <!-- Recovery Exercise 9 -->
+                <div class="exercise">
+                    <h3>9. Ankle Mobility Drills</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Mobility Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Ankle circles, alphabet spelling, calf stretches</p>
+                </div>
+
+                <!-- Recovery Exercise 10 -->
+                <div class="exercise">
+                    <h3>10. Neck & Trap Release</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Release Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Hold</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Gentle neck stretches, trap massage, stress release</p>
+                </div>
+
+                <!-- Recovery Exercise 11 -->
+                <div class="exercise">
+                    <h3>11. Wrist & Forearm Mobility</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Mobility Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">2</div><div>Sets</div></div>
+                        <div class="stat-box"><div class="stat-value">10</div><div>Each</div></div>
+                        <div class="stat-box"><div class="stat-value">30s</div><div>Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Wrist circles, stretches, forearm release</p>
+                </div>
+
+                <!-- Recovery Exercise 12 -->
+                <div class="exercise">
+                    <h3>12. Full Body Scan Meditation</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Meditation Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Session</div></div>
+                        <div class="stat-box"><div class="stat-value">10min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Complete Rest</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Body awareness, tension release, mental recovery</p>
+                </div>
+
+                <!-- Recovery Exercise 13 -->
+                <div class="exercise">
+                    <h3>13. Light Cycling or Swimming</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Activity Video</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Session</div></div>
+                        <div class="stat-box"><div class="stat-value">20min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Optional</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Low-impact cardio, joint-friendly movement</p>
+                </div>
+
+                <!-- Recovery Exercise 14 -->
+                <div class="exercise">
+                    <h3>14. Weekly Progress Reflection</h3>
+                    <div class="video-container">
+                        <div class="video-placeholder" onclick="playVideo(this)">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Click to Load Reflection Guide</span>
+                        </div>
+                        <video class="video-player" controls>
+                            <source src="#" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="exercise-stats">
+                        <div class="stat-box"><div class="stat-value">1</div><div>Session</div></div>
+                        <div class="stat-box"><div class="stat-value">5min</div><div>Duration</div></div>
+                        <div class="stat-box"><div class="stat-value">-</div><div>Mental Work</div></div>
+                    </div>
+                    <p><strong>Focus:</strong> Review progress, set next week goals, positive mindset</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-section">
+            <h3><i class="fas fa-check-circle"></i> Today's Progress - Day 1: Chest</h3>
+            <div class="exercise-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="exercise-count">14</div>
+                    <div>Exercises</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="workout-time">75</div>
+                    <div>Minutes</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4</div>
+                    <div>Sets Each</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">100%</div>
+                    <div>Form Focus</div>
+                </div>
+            </div>
+            <button class="complete-btn" onclick="markDayComplete()">
+                <i class="fas fa-check"></i> Mark Day 1 Complete
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Day Navigation Function
+        function showDay(dayNumber) {
+            // Hide all days
+            const allDays = document.querySelectorAll('.workout-day');
+            allDays.forEach(day => {
+                day.classList.remove('active');
+            });
+            
+            // Show selected day
+            const selectedDay = document.getElementById('day' + dayNumber);
+            if (selectedDay) {
+                selectedDay.classList.add('active');
+            }
+            
+            // Update active day button
+            const allButtons = document.querySelectorAll('.day-button');
+            allButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            const activeButton = document.querySelector(`.day-button:nth-child(${dayNumber})`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+            
+            // Update progress section
+            updateProgressSection(dayNumber);
+        }
+        
+        // Video Player Function
+        function playVideo(placeholder) {
+            const videoContainer = placeholder.parentElement;
+            const videoPlayer = videoContainer.querySelector('.video-player');
+            const videoPlaceholder = videoContainer.querySelector('.video-placeholder');
+            
+            // For demo purposes, we'll just show a message
+            // In a real app, you would load the actual video source
+            if (videoPlayer.style.display === 'block') {
+                videoPlayer.style.display = 'none';
+                videoPlaceholder.style.display = 'flex';
+            } else {
+                // Show loading state
+                videoPlaceholder.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Loading Video...</span>';
+                
+                // Simulate video loading
+                setTimeout(() => {
+                    videoPlaceholder.style.display = 'none';
+                    videoPlayer.style.display = 'block';
+                    // In real implementation, you would set the video source and play it
+                    // videoPlayer.src = 'path/to/video.mp4';
+                    // videoPlayer.play();
+                }, 1000);
+            }
+        }
+        
+        // Update Progress Section
+        function updateProgressSection(dayNumber) {
+            const progressSection = document.querySelector('.progress-section h3');
+            const completeButton = document.querySelector('.complete-btn');
+            const dayTitles = {
+                1: 'Chest',
+                2: 'Back', 
+                3: 'Legs',
+                4: 'Core',
+                5: 'Full Body',
+                6: 'Skills',
+                7: 'Recovery'
+            };
+            
+            if (progressSection) {
+                progressSection.innerHTML = `<i class="fas fa-check-circle"></i> Today's Progress - Day ${dayNumber}: ${dayTitles[dayNumber]}`;
+            }
+            
+            if (completeButton) {
+                completeButton.innerHTML = `<i class="fas fa-check"></i> Mark Day ${dayNumber} Complete`;
+                completeButton.onclick = function() { markDayComplete(dayNumber); };
+            }
+        }
+        
+        // Mark Day Complete Function
+        function markDayComplete(dayNumber = 1) {
+            alert(`Congratulations! Day ${dayNumber} marked as complete! 🎉\n\nKeep up the great work!`);
+            
+            // In a real app, you would save this to local storage or send to a server
+            localStorage.setItem(`day${dayNumber}Complete`, 'true');
+            
+            // Visual feedback
+            const completeButton = document.querySelector('.complete-btn');
+            if (completeButton) {
+                completeButton.innerHTML = '<i class="fas fa-check-double"></i> Day Completed!';
+                completeButton.style.background = '#28a745';
+                completeButton.disabled = true;
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show Day 1 by default
+            showDay(1);
+            
+            // Check for previously completed days
+            for (let i = 1; i <= 7; i++) {
+                if (localStorage.getItem(`day${i}Complete`) === 'true') {
+                    const dayButton = document.querySelector(`.day-button:nth-child(${i})`);
+                    if (dayButton) {
+                        dayButton.style.background = '#28a745';
+                        dayButton.innerHTML = `Day ${i}<br>✓ Complete`;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
